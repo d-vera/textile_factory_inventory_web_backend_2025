@@ -1,0 +1,29 @@
+Products attributes
+name
+description
+color
+size
+image
+
+Requirements:
+Create a backend for managing the inventory of a textile fabric 
+- Create the database in MySQL to manage products
+- The products must contain the following attributes:
+name
+description
+color
+size
+image
+-The database should contain users: the user can be admin or just a user 
+- The backend must be with Kotlin + Spring
+-The API should allow the users to login 
+- Create by default two users: one admin and one user in the database
+- The API should make CRUD of the products
+- Only the admin can make the changes in the CRUD
+-The normal user can only read the information
+- The API should support Jwt TOKEN for security in the bearer
+- The documentation of the API should be in Open API
+- The API should be rest API
+- The backend should have logs 
+
+set DB_PASSWORD=your_password
