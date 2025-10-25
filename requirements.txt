@@ -27,4 +27,4 @@ image
 - The backend should have logs 
 
 set DB_PASSWORD=your_password
-test1
+
