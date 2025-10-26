@@ -193,6 +193,29 @@ GET /api/products/color/Blue
 GET /api/products/size/Large
 ```
 
+#### Upload Product Image (ADMIN only)
+```http
+POST /api/products/upload-image
+Content-Type: multipart/form-data
+
+file: [image file]
+```
+
+**Response:**
+```json
+{
+  "message": "Image uploaded successfully",
+  "filename": "1730000000000_a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg"
+}
+```
+
+**Notes:**
+- Supported formats: jpg, jpeg, png, gif, webp
+- Maximum file size: 10MB
+- The returned filename should be used in the `image` field when creating/updating products
+- Images are stored in the `uploads/images/` directory
+- Uploaded images can be accessed at: `http://localhost:8080/uploads/images/{filename}`
+
 ## 🔒 Security
 
 - **JWT Token Expiration**: 24 hours

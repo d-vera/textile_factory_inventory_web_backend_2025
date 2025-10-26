@@ -3,6 +3,7 @@ package com.textile.inventory.controller
 import com.textile.inventory.dto.ProductRequest
 import com.textile.inventory.dto.ProductResponse
 import com.textile.inventory.service.ProductService
+import com.textile.inventory.service.ImageUploadService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/products")
@@ -24,7 +26,8 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Products", description = "Product management endpoints for textile fabric inventory")
 @SecurityRequirement(name = "bearerAuth")
 class ProductController(
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val imageUploadService: ImageUploadService
 ) {
     
     private val logger = LoggerFactory.getLogger(ProductController::class.java)
@@ -150,5 +153,45 @@ class ProductController(
         val products = productService.getProductsBySize(size)
         logger.info("Found {} products with size '{}'", products.size, size)
         return ResponseEntity.ok(products)
+    }
+    
+    @PostMapping("/upload-image")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Upload product image", 
+        description = "Upload an image file for a product. Returns the generated filename to be used in product creation/update (ADMIN only)"
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
+            ApiResponse(responseCode = "400", description = "Invalid file or file type"),
+            ApiResponse(responseCode = "403", description = "Access denied - Admin role required")
+        ]
+    )
+    fun uploadImage(
+        @Parameter(description = "Image file (jpg, jpeg, png, gif, webp - max 10MB)")
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<Map<String, String>> {
+        logger.info("Uploading image: {}", file.originalFilename)
+        
+        try {
+            val filename = imageUploadService.uploadImage(file)
+            logger.info("Image uploaded successfully with filename: {}", filename)
+            
+            return ResponseEntity.ok(mapOf(
+                "message" to "Image uploaded successfully",
+                "filename" to filename
+            ))
+        } catch (e: IllegalArgumentException) {
+            logger.error("Invalid file upload: {}", e.message)
+            return ResponseEntity.badRequest().body(mapOf(
+                "error" to (e.message ?: "Invalid file")
+            ))
+        } catch (e: Exception) {
+            logger.error("Failed to upload image: {}", e.message)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf(
+                "error" to "Failed to upload image"
+            ))
+        }
     }
 }
