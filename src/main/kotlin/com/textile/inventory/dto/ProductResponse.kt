@@ -10,6 +10,7 @@ data class ProductResponse(
     val color: String,
     val size: String,
     val image: String?,
+    val quantity: Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 ) {
@@ -22,6 +23,7 @@ data class ProductResponse(
                 color = product.color,
                 size = product.size,
                 image = product.image,
+                quantity = product.quantity,
                 createdAt = product.createdAt,
                 updatedAt = product.updatedAt
             )

@@ -25,6 +25,9 @@ data class Product(
     @Column(columnDefinition = "TEXT")
     var image: String? = null,
     
+    @Column(nullable = false)
+    var quantity: Int = 0,
+    
     @Column(nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
     

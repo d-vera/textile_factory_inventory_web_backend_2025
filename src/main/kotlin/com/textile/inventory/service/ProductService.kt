@@ -28,7 +28,8 @@ class ProductService(
             description = request.description,
             color = request.color,
             size = request.size,
-            image = request.image
+            image = request.image,
+            quantity = request.quantity
         )
         val savedProduct = productRepository.save(product)
         return ProductResponse.fromProduct(savedProduct)
@@ -43,6 +44,7 @@ class ProductService(
         product.color = request.color
         product.size = request.size
         product.image = request.image
+        product.quantity = request.quantity
         product.updatedAt = LocalDateTime.now()
         
         val updatedProduct = productRepository.save(product)
