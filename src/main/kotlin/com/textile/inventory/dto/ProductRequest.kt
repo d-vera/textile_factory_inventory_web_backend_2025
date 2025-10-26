@@ -14,5 +14,7 @@ data class ProductRequest(
     @field:NotBlank(message = "Size is required")
     val size: String,
     
-    val image: String? = null
+    val image: String? = null,
+    
+    val quantity: Int = 0
 )
